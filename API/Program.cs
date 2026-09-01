@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using Application;
+using Application.Core.MappingProfiles;
 using Persistence;
 using Application.Activities.Queries;
+using AutoMapper;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +12,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddMediatR(configuration =>
     configuration.RegisterServicesFromAssemblyContaining<GetActivityList.Hander>());
+builder.Services.AddAutoMapper(cfg =>
+{
+    cfg.AddProfile<ActivityProfile>();    
+});
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
