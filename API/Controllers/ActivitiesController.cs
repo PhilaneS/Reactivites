@@ -25,16 +25,18 @@ public class ActivitiesController() : BaseApiController
     }
 
     [HttpPost]
-    public async Task<ActionResult<Activity>> CreateActivity(
-        CreateActivity.Command command)
+    public async Task<ActionResult<string>> CreateActivity(Activity activity)
     {
-        var activity = await Mediator.Send(command);
-
-        return CreatedAtAction(nameof(GetActivity), new { id = activity.Id }, activity);
+        var command = new CreateActivity.Command
+        {
+            Activity = activity
+        };
+    
+        return await Mediator.Send(command);
     }
 
     [HttpPut]
-    public async Task<ActionResult<Activity>> EditActivity(Activity activity)
+    public async Task<IActionResult> EditActivity(Activity activity)
     {
         var command = new EditActivity.Command
         {
