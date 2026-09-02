@@ -1,24 +1,24 @@
-import { Container, CssBaseline } from "@mui/material";
+import { Box, Container, CssBaseline, Typography } from "@mui/material";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import NavBar from "./NavBar";
 import ActivityDashBoard from "../../features/Activities/ActivityDashBoard/ActivityDashBoard";
+import { useQuery } from "@tanstack/react-query";
 
 function App() {
-  const [activities, setActivities] = useState<Activity[]>([]);
   const [selectedActivity, setSelectedActivity] = useState<Activity | undefined>(undefined);
   const [editMode, setEditMode] = useState(false);
 
-  useEffect(() => {
-    axios.get<Activity[]>('https://localhost:5001/api/activities')
-      .then(response => setActivities(response.data));
-    return () => {
-      // Cleanup function if needed
-    };
-  }, []);
+  const {data: activities, isPending} = useQuery({
+    queryKey: ['activities'],
+    queryFn: async () => {
+      const response = await axios.get<Activity[]>('https://localhost:5001/api/activities');
+      return response.data;
+    }
+  });
 
   const handleSelectActivity = (id: string) => {
-    const activity = activities.find(a => a.id === id);
+    const activity = activities!.find(a => a.id === id);
     setSelectedActivity(activity);
   };
   const handleCancelSelectActivity = () => {
@@ -39,30 +39,25 @@ function App() {
   };
 
   const handleCreateOrEditActivity = (activity: Activity) => {
-    if (activity.id) {
-      setActivities([...activities.filter(a => a.id !== activity.id), activity]);
-      setSelectedActivity(activity);
-    } else {
-      activity.id = Math.random().toString(36).substring(2, 9); // Generate a random ID
-      setActivities([...activities, activity]);
-      setSelectedActivity(activity);
-    }
-    setEditMode(false);
+  console.log(activity);
   };
 
   const handleDeleteActivity = (id: string) => {
-    setActivities(activities.filter(a => a.id !== id));
-    if (selectedActivity?.id === id) {
-      handleCancelSelectActivity();
+    console.log(id);
     }
-  };
+  
 
   return (
-    <>
+    <Box sx={{ bgcolor: '#eeeeee', minHeight: '100vh' }}>
       <CssBaseline />
       < NavBar openForm={handleFormOpen} />
       <Container maxWidth="xl" sx={{ mt: 3 }}>
-        <ActivityDashBoard
+      {!activities || isPending ?
+        (
+          <Typography variant="h3" color="secondary">Loading activities...
+          </Typography>
+        ) : (
+          <ActivityDashBoard
           activities={activities}
           selectedActivity={selectedActivity}
           selectActivity={handleSelectActivity}
@@ -73,9 +68,11 @@ function App() {
           createOrEditActivity={handleCreateOrEditActivity}
           deleteActivity={handleDeleteActivity}
         />
+        )}
+        
       </Container>
 
-    </>
+    </Box>
   );
 }
 
