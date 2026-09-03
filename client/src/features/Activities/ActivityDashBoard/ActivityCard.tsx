@@ -1,13 +1,14 @@
 import { Card, CardContent, Typography, CardActions, Chip, Button, Box } from "@mui/material";
 import { useActivities } from "../../../lib/hooks/useActivities";
+import { Link } from "react-router";
 
 type Props = {
   activity: Activity;
-  selectActivity: (id: string) => void; 
 };
-export default function ActivityCard({ activity, selectActivity }: Props) {
+export default function ActivityCard({ activity }: Props) {
 
   const { deleteActivity } = useActivities();
+
   
   const handleDelete = async (id: string) => {
     await deleteActivity.mutateAsync(id);
@@ -25,7 +26,7 @@ export default function ActivityCard({ activity, selectActivity }: Props) {
       <CardActions sx={{display: 'flex', justifyContent: 'space-between',pb:2}} >
         <Chip label={activity.category} variant="outlined" />
        <Box sx={{display: 'flex', gap: 3}}>
-            <Button size="medium"  variant="contained" onClick={() => selectActivity(activity.id)}>View</Button>
+            <Button size="medium"  variant="contained" component={Link} to={`/activities/${activity.id}`}>View</Button>
             <Button size="medium"  variant="contained" color="error" 
             onClick={() => handleDelete(activity.id)}
             disabled={deleteActivity.isPending}
