@@ -31,15 +31,6 @@ function App() {
     setEditMode(false);
   };
 
-  const handleCreateOrEditActivity = (activity: Activity) => {
-  console.log(activity);
-  };
-
-  const handleDeleteActivity = (id: string) => {
-    console.log(id);
-    }
-  
-
   return (
     <Box sx={{ bgcolor: '#eeeeee', minHeight: '100vh' }}>
       <CssBaseline />
@@ -57,9 +48,7 @@ function App() {
           cancelSelectActivity={handleCancelSelectActivity}
           editMode={editMode}
           openForm={handleFormOpen}
-          closeForm={handleFormClose}
-          createOrEditActivity={handleCreateOrEditActivity}
-          deleteActivity={handleDeleteActivity}
+          closeForm={handleFormClose}          
         />
         )}
         
