@@ -1,3 +1,4 @@
+using Application.Core;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -6,26 +7,27 @@ namespace Application.Activities.Commands;
 
 public class DeleteActivity
 {
-    public class Command : IRequest<bool>
+    public class Command : IRequest<Result<Unit>>
     {
         public required string Id { get; set; }
     }
 
-    public class Handler(AppDbContext context) : IRequestHandler<Command, bool>
+    public class Handler(AppDbContext context) : IRequestHandler<Command, Result<Unit>>
     {
-        public async Task<bool> Handle(Command request, CancellationToken cancellationToken)
+        public async Task<Result<Unit>> Handle(Command request, CancellationToken cancellationToken)
         {
             var activity = await context.Activities
                 .SingleOrDefaultAsync(activity => activity.Id == request.Id, cancellationToken);
 
-            if (activity is null)
-            {
-                return false;
-            }
+            if (activity is null) return Result<Unit>.Failure("Activity not found", 404);
 
             context.Activities.Remove(activity);
-            await context.SaveChangesAsync(cancellationToken);
-            return true;
+
+            var result = await context.SaveChangesAsync(cancellationToken) > 0;
+
+            if (!result) return Result<Unit>.Failure("Failed to delete the activity", 404);
+
+            return Result<Unit>.Success(Unit.Value);
         }
     }
 }

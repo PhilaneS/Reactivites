@@ -4,18 +4,28 @@ using Application.Core.MappingProfiles;
 using Persistence;
 using Application.Activities.Queries;
 using AutoMapper;
+using FluentValidation;
+using Application.Activities.Validators;
+using Application.Core;
+using API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-builder.Services.AddMediatR(configuration =>
-    configuration.RegisterServicesFromAssemblyContaining<GetActivityList.Hander>());
+builder.Services.AddTransient<ExceptionMiddleware>();
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssemblyContaining<GetActivityList.Hander>();
+    cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+});
 builder.Services.AddAutoMapper(cfg =>
 {
-    cfg.AddProfile<ActivityProfile>();    
+    cfg.AddProfile<ActivityProfile>();
 });
+
+builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityValidator>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnectionString")));
@@ -27,7 +37,7 @@ builder.Services.AddCors(options =>
     {
         policy.AllowAnyHeader()
               .AllowAnyMethod()
-              .WithOrigins("http://localhost:3000","https://localhost:3000"); // Update this to match your React app's URL
+              .WithOrigins("http://localhost:3000", "https://localhost:3000"); // Update this to match your React app's URL
     });
 });
 
@@ -51,6 +61,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("CorsPolicy");
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthorization();
 
