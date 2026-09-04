@@ -1,6 +1,7 @@
 import { AccessTime, Place } from "@mui/icons-material";
 import { Card, CardContent, Typography, Chip, Button, Box, CardHeader, Avatar, Divider } from "@mui/material";
 import { Link } from "react-router";
+import formatDate from "../../../lib/util/util";
 
 type Props = {
   activity: Activity;
@@ -39,23 +40,27 @@ export default function ActivityCard({ activity }: Props) {
 
       <CardContent sx={{ p: 0 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, px: 2 }}>
-          <AccessTime sx={{ mr: 1 }} />
-          <Typography variant='body2' >{activity.date}</Typography>
+          <Box sx={{ display: 'flex', flexGrow: 0, alignItems: 'center' }}>
+            <AccessTime sx={{ mr: 1 }} />
+            <Typography variant='body2' noWrap >
+              {formatDate(activity.date)}
+            </Typography>
+          </Box>
           <Place sx={{ ml: 3, mr: 1 }} />
           <Typography variant='body2' >{activity.venue}</Typography>
         </Box>
-        <Divider  />
-        <Box sx={{ display: 'flex', backgroundColor:'grey.200', gap: 2, py: 3,pl:3 }}></Box>
+        <Divider />
+        <Box sx={{ display: 'flex', backgroundColor: 'grey.200', gap: 2, py: 3, pl: 3 }}></Box>
       </CardContent>
       <CardContent sx={{ pb: 2 }} >
         <Typography variant='body2' >{activity.description}</Typography>
-          <Button 
-          component={Link} 
+        <Button
+          component={Link}
           to={`/activities/${activity.id}`}
-          size="medium" 
-          variant="contained" 
-          sx={{display:'flex',justifySelf:'self-end', borderRadius:3}}
-          >View</Button>
+          size="medium"
+          variant="contained"
+          sx={{ display: 'flex', justifySelf: 'self-end', borderRadius: 3 }}
+        >View</Button>
       </CardContent>
     </Card>
   )

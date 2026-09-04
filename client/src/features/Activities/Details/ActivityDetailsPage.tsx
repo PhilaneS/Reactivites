@@ -17,8 +17,8 @@ export default function ActivityDetailsPage() {
   return (
     <Grid container spacing={3} >
       <Grid size={8} >
-        <ActivityDetailsHeader/>
-        <ActivityDetailsInfor/>
+        <ActivityDetailsHeader activity={activity}/>
+        <ActivityDetailsInfor activity={activity} />
         <ActivityDetailsChat/>
       </Grid>
       <Grid size={4} >

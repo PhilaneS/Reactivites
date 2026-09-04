@@ -1,7 +1,12 @@
 import { CalendarToday, Info, Place } from "@mui/icons-material";
 import { Divider, Grid, Paper, Typography } from "@mui/material";
+import formatDate from "../../../lib/util/util";
 
-export default function ActivityDetailsInfor() {
+type Props = {
+    activity: Activity
+}
+
+export default function ActivityDetailsInfor({ activity }: Props) {
     return (
         <Paper sx={{ mb: 2 }}>
             <Grid container sx={{ alignItems: 'center', pl: 2, py: 1 }}>
@@ -9,7 +14,7 @@ export default function ActivityDetailsInfor() {
                     <Info color="info" fontSize="large" />
                 </Grid>
                 <Grid size={11}>
-                    <Typography>Activity description</Typography>
+                    <Typography>{activity.description}</Typography>
                 </Grid>
             </Grid>
             <Divider />
@@ -18,7 +23,7 @@ export default function ActivityDetailsInfor() {
                     <CalendarToday color="info" fontSize="large" />
                 </Grid>
                 <Grid size={11}>
-                    <Typography>1 Jan 2025 at 1:40pm</Typography>
+                    <Typography>{formatDate(activity.date)}</Typography>
                 </Grid>
             </Grid>
             <Divider />
@@ -28,12 +33,10 @@ export default function ActivityDetailsInfor() {
                 </Grid>
                 <Grid size={11}>
                     <Typography>
-                        Venue, City
+                        {activity.venue}, {activity.city}
                     </Typography>
                 </Grid>
             </Grid>
-
         </Paper>
-
     )
 }
