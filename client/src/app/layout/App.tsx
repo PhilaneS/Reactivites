@@ -6,7 +6,7 @@ import HomePage from "../../features/home/HomePage";
 function App() {
   const location = useLocation();
   return (
-    <Box sx={{ bgcolor: '#eeeeee', minHeight: '100vh' }}>
+    <Box sx={{ bgcolor: '#f0e3e3', minHeight: '100vh' }}>
       <CssBaseline />
       {location.pathname === '/' ? <HomePage /> : (
         <>

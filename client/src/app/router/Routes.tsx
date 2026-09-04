@@ -4,18 +4,20 @@ import HomePage from "../../features/home/HomePage";
 import ActivityForm from "../../features/Activities/Form/ActivityForm";
 import ActivityDashBoard from "../../features/Activities/ActivityDashBoard/ActivityDashBoard";
 import ActivityDetailsPage from "../../features/Activities/Details/ActivityDetailsPage";
+import Counter from "../../features/counter/Counter";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />,
     children: [
-      
-        { path:'', element: <HomePage /> },
-        { path: 'activities',element: <ActivityDashBoard/>},
-        { path: 'activities/:id',element: <ActivityDetailsPage/>},
-        { path: 'createActivity',element: <ActivityForm key="create" />},
-        { path: 'manage/:id',element: <ActivityForm/>}
+
+      { path: '', element: <HomePage /> },
+      { path: 'activities', element: <ActivityDashBoard /> },
+      { path: 'activities/:id', element: <ActivityDetailsPage /> },
+      { path: 'createActivity', element: <ActivityForm key="create" /> },
+      { path: 'manage/:id', element: <ActivityForm /> },
+      { path: 'counter', element: <Counter /> }
 
     ]
   }

@@ -9,7 +9,8 @@ export const useActivities = (id?: string) => {
     queryFn: async () => {
       const response = await aget.get<Activity[]>('/activities');
       return response.data;
-    }
+    },
+    enabled:!id &&location.pathname =='/activities' 
   });
 
 const {data: activity,isLoading:isLoadingActivity } = useQuery({
