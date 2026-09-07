@@ -1,26 +1,29 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import aget from "../api/agent";
+import type { Activity } from "../types";
+
+type CreateActivity = Omit<Activity, 'id'>;
 
 export const useActivities = (id?: string) => {
   const queryClient = useQueryClient();
 
-  const {data: activities,isPending} = useQuery({
+  const { data: activities, isPending } = useQuery({
     queryKey: ['activities'],
     queryFn: async () => {
       const response = await aget.get<Activity[]>('/activities');
       return response.data;
     },
-    enabled:!id &&location.pathname =='/activities' 
+    enabled: !id && location.pathname == '/activities'
   });
 
-const {data: activity,isLoading:isLoadingActivity } = useQuery({
-  queryKey: ['activities',id],
-  queryFn: async()=> {
-    const response = await aget.get<Activity>(`activities/${id}`);
-    return response.data
-  },
-  enabled:!!id
-});
+  const { data: activity, isLoading: isLoadingActivity } = useQuery({
+    queryKey: ['activities', id],
+    queryFn: async () => {
+      const response = await aget.get<Activity>(`activities/${id}`);
+      return response.data
+    },
+    enabled: !!id
+  });
 
   const updateActivity = useMutation({
     mutationFn: async (activity: Activity) => {
@@ -38,9 +41,9 @@ const {data: activity,isLoading:isLoadingActivity } = useQuery({
   });
 
   const createActivity = useMutation({
-    mutationFn: async (activity: Activity) => {
-     const response =  await aget.post('/activities', activity);
-     return response.data; 
+    mutationFn: async (activity: CreateActivity) => {
+      const response = await aget.post<string>('/activities', activity);
+      return response.data;
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
@@ -52,7 +55,7 @@ const {data: activity,isLoading:isLoadingActivity } = useQuery({
 
   const deleteActivity = useMutation({
     mutationFn: async (activityId: string) => {
-      await aget.delete(`/activities/${activityId}`); 
+      await aget.delete(`/activities/${activityId}`);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({
