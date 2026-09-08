@@ -3,7 +3,7 @@ import { useActivities } from "../../../lib/hooks/useActivities";
 import { useNavigate, useParams } from "react-router";
 import { useForm } from "react-hook-form"
 import { useEffect } from "react";
-import { activitySchema, type ActivitySchema } from "../../../lib/schemas/activityschema";
+import { activitySchema, type ActivitySchema } from "../../../lib/schemas/activitySchema";
 import { zodResolver } from '@hookform/resolvers/zod'
 import TextInput from "../../../app/shared/componets/TextInput";
 import DateTimeInput from "../../../app/shared/componets/DateTimeInput";
