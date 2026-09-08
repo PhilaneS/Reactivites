@@ -3,17 +3,19 @@ using Microsoft.AspNetCore.Mvc;
 using Application.Activities.Queries;
 using Application.Activities.Commands;
 using Application.Activities.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace API.Controllers;
 
 public class ActivitiesController() : BaseApiController
 {
+
     [HttpGet]
     public async Task<ActionResult<List<Activity>>> GetActivities()
     {
-        return await Mediator.Send(new Application.Activities.Queries.GetActivityList.Query());
+        return await Mediator.Send(new GetActivityList.Query());
     }
-
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<ActionResult<Activity>> GetActivity(string id)
     {

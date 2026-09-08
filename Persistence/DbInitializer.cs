@@ -1,19 +1,50 @@
 using Domain;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Persistence;
 
 public static class DbInitializer
 {
-    public static async Task SeedData(AppDbContext context)
+    public static async Task SeedData(AppDbContext context, UserManager<User> userManager)
     {
-        await context.Database.EnsureCreatedAsync();
+        await context.Database.MigrateAsync();
+
+         if (!userManager.Users.Any())
+         {
+            var users = new List<User>
+            {
+                new ()
+                {
+                    DisplayName="Bob", UserName="bob@test.com",Email="bob@test.com"
+                },
+                new()
+                {
+                    DisplayName="Tom", UserName="tom@test.com",Email="tom@test.com"
+                },
+                new ()
+                {
+                    DisplayName="Jane", UserName="jane@test.com",Email="jane@test.com"
+                },
+                new()
+                {
+                    DisplayName="PhilaneS", UserName="philanes@test.com",Email="philanes@test.com"
+                }
+            };
+
+            foreach (var user in users)
+            {
+                await userManager.CreateAsync(user,"Pa$$W0rd");
+            }
+         }
 
         if (context.Activities.Any())
         {
             return;
         }
 
-          var activities = new List<Activity>
+        var activities = new List<Activity>
           {
               new() {
                 Title = "Past Activity 1",

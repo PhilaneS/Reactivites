@@ -8,13 +8,31 @@ using FluentValidation;
 using Application.Activities.Validators;
 using Application.Core;
 using API.Middleware;
+using Domain;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(opt =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+
+    opt.Filters.Add(new AuthorizeFilter(policy));
+});
 builder.Services.AddTransient<ExceptionMiddleware>();
+builder.Services.AddIdentityApiEndpoints<User>(opt =>
+{
+    opt.User.RequireUniqueEmail = true;
+})
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<AppDbContext>();
+
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblyContaining<GetActivityList.Hander>();
@@ -37,6 +55,7 @@ builder.Services.AddCors(options =>
     {
         policy.AllowAnyHeader()
               .AllowAnyMethod()
+              .AllowCredentials()
               .WithOrigins("http://localhost:3000", "https://localhost:3000"); // Update this to match your React app's URL
     });
 });
@@ -49,13 +68,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    await DbInitializer.SeedData(context);
-}
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+    await DbInitializer.SeedData(context, userManager);
 }
 
 app.UseHttpsRedirection();
@@ -64,8 +78,12 @@ app.UseCors("CorsPolicy");
 
 app.UseMiddleware<ExceptionMiddleware>();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapGroup("api").MapIdentityApi<User>();
 
 app.Run();
