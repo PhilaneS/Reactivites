@@ -12,6 +12,8 @@ using Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Application.Interfaces;
+using Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +46,7 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblyContaining<GetActivityList.Hander>();
     cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
 });
+builder.Services.AddScoped<IUserAccessor,UserAccesssor>();
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<ActivityProfile>();
