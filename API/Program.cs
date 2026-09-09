@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Application;
 using Application.Core.MappingProfiles;
 using Persistence;
 using Application.Activities.Queries;
-using AutoMapper;
 using FluentValidation;
 using Application.Activities.Validators;
 using Application.Core;
@@ -13,7 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Application.Interfaces;
-using Infrastructure;
+using Infrastructure.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +25,7 @@ builder.Services.AddControllers(opt =>
 
     opt.Filters.Add(new AuthorizeFilter(policy));
 });
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddTransient<ExceptionMiddleware>();
 builder.Services.AddIdentityApiEndpoints<User>(opt =>
 {
@@ -68,6 +67,14 @@ builder.Services.AddCors(options =>
               .WithOrigins("http://localhost:3000", "https://localhost:3000"); // Update this to match your React app's URL
     });
 });
+
+builder.Services.AddAuthorization(opt => {
+    opt.AddPolicy("IsActivityHost", policy => {
+        policy.Requirements.Add(new IsHostRequirement());
+    });
+});
+
+builder.Services.AddTransient<IAuthorizationHandler,IsHostRequirementHandler>();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //builder.Services.AddOpenApi();

@@ -8,9 +8,9 @@ using Domain;
 using Microsoft.AspNetCore.Http;
 using Persistence;
 
-namespace Infrastructure
+namespace Infrastructure.Security
 {
-    public class UserAccesssor(HttpContextAccessor httpContextAccessor, AppDbContext dbContext) : IUserAccessor
+    public class UserAccesssor(IHttpContextAccessor httpContextAccessor, AppDbContext dbContext) : IUserAccessor
     {
         public async Task<User> GetUserAsync()
         {
