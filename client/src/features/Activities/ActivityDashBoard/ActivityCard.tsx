@@ -2,6 +2,7 @@ import { AccessTime, Place } from "@mui/icons-material";
 import { Card, CardContent, Typography, Chip, Button, Box, CardHeader, Avatar, Divider } from "@mui/material";
 import { Link } from "react-router";
 import formatDate from "../../../lib/util/util";
+import AvatarPopover from "../../../app/shared/componets/AvatarPopover";
 
 type Props = {
   activity: Activity;
@@ -10,7 +11,6 @@ export default function ActivityCard({ activity }: Props) {
 
   const label = activity.isHost ? 'You are hosting' : 'You are going';
   const color = activity.isHost ? 'secondary' : activity.isGoing ? 'warning' : 'default';
-  console.log(activity);
   return (
     <Card elevation={3} sx={{ borderRadius: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
@@ -29,7 +29,7 @@ export default function ActivityCard({ activity }: Props) {
         />
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mr: 2 }}>
-          {(activity.isHost || activity.isGoing) && <Chip label={label} color={color} sx={{ borderRadius: 2 }} />}
+          {(activity.isHost || activity.isGoing) && <Chip variant="outlined" label={label} color={color} sx={{ borderRadius: 2 }} />}
           {(activity.isCancelled) && <Chip label='Cancelled' color='error' sx={{ borderRadius: 2 }} />}
         </Box>
       </Box>
@@ -50,13 +50,7 @@ export default function ActivityCard({ activity }: Props) {
         <Divider />
         <Box sx={{ display: 'flex', backgroundColor: 'grey.200', gap: 2, py: 3, pl: 3 }}>
           {activity.attendees.map(att => (
-            <Avatar
-              key={att.id}
-              alt={att.displayName + 'image'}
-              src={att.imageUrl}
-              component={Link}
-              to={`/profiles/${att.id}`}
-            />
+            <AvatarPopover key={att.id} profile={att} />
           ))}
         </Box>
       </CardContent>
