@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Application.Interfaces;
 using Infrastructure.Security;
+using Infrastructure.Photos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,7 +46,7 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblyContaining<GetActivityList.Hander>();
     cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
 });
-builder.Services.AddScoped<IUserAccessor,UserAccesssor>();
+builder.Services.AddScoped<IUserAccessor, UserAccesssor>();
 builder.Services.AddAutoMapper(cfg =>
 {
     cfg.AddProfile<ActivityProfile>();
@@ -68,13 +69,17 @@ builder.Services.AddCors(options =>
     });
 });
 
-builder.Services.AddAuthorization(opt => {
-    opt.AddPolicy("IsActivityHost", policy => {
+builder.Services.AddAuthorization(opt =>
+{
+    opt.AddPolicy("IsActivityHost", policy =>
+    {
         policy.Requirements.Add(new IsHostRequirement());
     });
 });
 
-builder.Services.AddTransient<IAuthorizationHandler,IsHostRequirementHandler>();
+builder.Services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
+builder.Services.Configure<CloudinarySettings>(builder.Configuration
+    .GetSection("CloudinarySettings"));
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //builder.Services.AddOpenApi();
