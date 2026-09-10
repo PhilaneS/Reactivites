@@ -32,7 +32,7 @@ namespace Infrastructure.Security
 
             var result = await _cloudinary.DestroyAsync(deleteParams);
 
-            if(result.Error !=null)
+            if (result.Error != null)
             {
                 throw new Exception(result.Error.Message);
             }
@@ -50,11 +50,11 @@ namespace Infrastructure.Security
                 {
                     File = new FileDescription(file.FileName, stream),
                     //Transformation = new Transformation().Height(500).Crop("fill"),
-                    Folder = "Reactivities/2026"
+                    Folder = "2026/Reactivities"
                 };
                 var uploadResult = await _cloudinary.UploadAsync(uploadParams);
 
-                if(uploadResult.Error != null)
+                if (uploadResult.Error != null)
                 {
                     throw new Exception(uploadResult.Error.Message);
                 }
