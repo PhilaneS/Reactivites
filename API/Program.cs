@@ -46,6 +46,7 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblyContaining<GetActivityList.Hander>();
     cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
 });
+builder.Services.AddScoped<IPhotoService,PhotoService>();
 builder.Services.AddScoped<IUserAccessor, UserAccesssor>();
 builder.Services.AddAutoMapper(cfg =>
 {
