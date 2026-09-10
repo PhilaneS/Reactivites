@@ -17,7 +17,13 @@ namespace API.Controllers
         [HttpGet("{userId}/photos")]
         public async Task<ActionResult<List<Photo>>> GetPhotosForUser(string userId)
         {
-            return HandleResult(await Mediator.Send(new GetProfilePhotos.Query{ UserId = userId}));
+            return HandleResult(await Mediator.Send(new GetProfilePhotos.Query { UserId = userId }));
+        }
+
+        [HttpDelete("{photoId}/photos")]
+        public async Task<ActionResult> DeletePhotos(string photoId)
+        {
+            return HandleResult(await Mediator.Send(new DeletePhoto.Command { PhotoId = photoId }));
         }
 
     }
