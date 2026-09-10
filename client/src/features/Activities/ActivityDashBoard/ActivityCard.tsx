@@ -15,7 +15,11 @@ export default function ActivityCard({ activity }: Props) {
     <Card elevation={3} sx={{ borderRadius: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }} >
         <CardHeader
-          avatar={<Avatar sx={{ height: 80, width: 80 }} />}
+          avatar={<Avatar
+            src={activity.hostImageUrl}
+            sx={{ height: 80, width: 80 }}
+            alt="image of host"
+          />}
           title={
             <Typography sx={{ fontWeight: 700, fontSize: 20 }}>
               {activity.title}

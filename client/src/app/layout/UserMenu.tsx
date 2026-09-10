@@ -27,7 +27,12 @@ export default function BasicMenu() {
                 sx={{ fontSize: '1.1rem' }}
             >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                    <Avatar alt={currentUser?.displayName ?? 'User'} />
+                    <Avatar
+                        src={currentUser?.imageUrl}
+                        alt='current user image'
+
+                    />
+
                     {currentUser?.displayName ?? 'Account'}
                 </Box>
 
@@ -49,7 +54,7 @@ export default function BasicMenu() {
                     </ListItemIcon>
                     <Typography>Create Activity</Typography>
                 </MenuItem>
-                <MenuItem component={Link} to='/profile' onClick={handleClose}>
+                <MenuItem component={Link} to={`/profiles/${currentUser?.id}`} onClick={handleClose}>
                     <ListItemIcon>
                         <Person />
                     </ListItemIcon>
