@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using Application.Profiles.Commands;
+using Application.Profiles.Dtos;
 using Application.Profiles.Queries;
 using Domain;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,12 @@ namespace API.Controllers
 {
     public class ProfilesController : BaseApiController
     {
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<UserProfileDto>> GetProfile(string userId)
+        {
+            return HandleResult(await Mediator.Send(new GetProfile.Query { UserId = userId }));
+        }
+
         [HttpPost("add-photo")]
         public async Task<ActionResult<Photo>> AddPhoto(IFormFile file)
         {
