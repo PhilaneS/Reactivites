@@ -15,7 +15,6 @@ export default function AvatarPopover({ profile }: Props) {
         setAnchorEl(event.currentTarget);
     };
 
-    console.log(profile);
 
     const handlePopoverClose = () => {
         setAnchorEl(null);

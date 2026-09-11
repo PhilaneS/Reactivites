@@ -5,16 +5,22 @@ type Props = {
 }
 
 export default function ProfileHeader({ profile }: Props) {
-    console.log(profile);
     const isFollowing = true;
     return (
         <Paper elevation={3} sx={{ p: 4, mb: 3, borderRadius: 3 }}>
             <Grid container spacing={2}>
                 <Grid size={8}>
                     <Stack direction='row' spacing={3} sx={{ alignItems: 'center' }} >
-                        <Avatar sx={{ width: 150, height: 150 }} />
+                        <Avatar 
+                            sx={{ 
+                                width: 150, 
+                                height: 150 
+                            }}
+                            src={profile.imageUrl}
+                            alt={profile.displayName + ' image'}
+                         />
                         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-                            <Typography variant="h4"> Display name </Typography>
+                            <Typography variant="h4"> {profile.displayName} </Typography>
                             {isFollowing &&
                                 <Chip 
                                 variant="outlined" 

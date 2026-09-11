@@ -6,9 +6,9 @@ import ProfileContent from "./ProfileContent";
 
 export default function ProfilePage() {
     const { id } = useParams();
-    const { profile, photos, isLoading } = useProfile(id);
+    const { profile, isLoadingProfile, isLoatingPhotos } = useProfile(id);
 
-    if (isLoading) {
+    if (isLoadingProfile || isLoatingPhotos) {
         return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 8 }} />;
     }
 
@@ -20,7 +20,7 @@ export default function ProfilePage() {
         <Grid container spacing={3}>
             <Grid size={12}>
                 <ProfileHeader profile={profile} />
-                <ProfileContent photos={photos} />
+                <ProfileContent />
             </Grid>
         </Grid>
     )

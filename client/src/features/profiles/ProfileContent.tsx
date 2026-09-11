@@ -1,25 +1,24 @@
 import { Box, Paper, Tab, Tabs } from "@mui/material";
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
+import ProfilePhotos from "./ProfilePhotos";
+import ProfileAbout from "./ProfileAbout";
 
-type Props = {
-    photos: Photo[];
-}
 
-export default function ProfileContent({ photos }: Props) {
+
+export default function ProfileContent() {
     const [value, setValue] = useState(0);
-
-    const handleChange = (_, newValue: number) => {
+    //console.log(photos);
+    const handleChange = (_: SyntheticEvent, newValue: number) => {
         setValue(newValue);
     }
 
     const tabContent = [
-        { Label: 'About', content: <div>About</div> },
-        { Label: 'Photos', content: <div>Photos</div> },
+        { Label: 'About', content: <ProfileAbout /> },
+        { Label: 'Photos', content: <ProfilePhotos /> },
         { Label: 'Events', content: <div>Events</div> },
         { Label: 'Followers', content: <div>Followers</div> },
         { Label: 'Following', content: <div>Following</div> }
     ];
-    console.log(photos);
     return (
         <Box
             component={Paper}
@@ -42,7 +41,7 @@ export default function ProfileContent({ photos }: Props) {
                     <Tab key={index} label={tab.Label} sx={{ mr: 3 }} />
                 ))}
             </Tabs>
-            <Box sx={{ flexGrow: 1, p: 3 }}>
+            <Box sx={{ flexGrow: 1, p: 3, pt: 0 }}>
                 {tabContent[value].content}
             </Box>
         </Box>
