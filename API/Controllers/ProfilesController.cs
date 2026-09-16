@@ -39,5 +39,11 @@ namespace API.Controllers
             return HandleResult(await Mediator.Send(new SetMainPhoto.Command { PhotoId = photoId }));
         }
 
+        [HttpPut]
+        public async Task<ActionResult> UpdateProfile(EditProfile.Command command)
+        {
+            return HandleResult(await Mediator.Send(command));
+        }
+
     }
 }

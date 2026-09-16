@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import aget from "../api/agent";
-import { useId, useMemo } from "react";
+import { useMemo } from "react";
+import type { EditProfileSchema } from "../schemas/editProfileSchema";
 
 export const useProfile = (userId?: string) => {
     const queryClient = useQueryClient();
@@ -46,7 +47,7 @@ export const useProfile = (userId?: string) => {
                     imageUrl: data.imageUrl ?? photo.url
                 }
             });
-            queryClient.setQueryData(['profile', useId], (data: Profile) => {
+            queryClient.setQueryData(['profile', userId], (data: Profile) => {
                 if (!data) return data;
                 return {
                     ...data,
@@ -96,6 +97,36 @@ export const useProfile = (userId?: string) => {
         }
     });
 
+    const updateProfile = useMutation({
+        mutationFn: async (profile: EditProfileSchema) => {
+            const response = await aget.put<Profile>('/profiles', {
+                displayName: profile.displayName,
+                bio: profile.bio ?? ''
+            });
+            return response.data;
+        },
+        onSuccess: (updatedProfile, profile) => {
+            queryClient.setQueryData<Profile | undefined>(['profile', userId], (data) => {
+                if (!data) return data;
+
+                return {
+                    ...data,
+                    displayName: updatedProfile.displayName ?? profile.displayName,
+                    bio: updatedProfile.bio ?? profile.bio ?? data.bio
+                };
+            });
+
+            queryClient.setQueryData<User | undefined>(['user'], (data) => {
+                if (!data) return data;
+
+                return {
+                    ...data,
+                    displayName: updatedProfile.displayName ?? profile.displayName
+                };
+            });
+        }
+    });
+
     return {
         profile: profileQuery.data,
         photos: photosQuery.data ?? [],
@@ -104,6 +135,7 @@ export const useProfile = (userId?: string) => {
         isCurrentUser,
         uploadPhoto,
         setMainPhoto,
-        deletePhoto
+        deletePhoto,
+        updateProfile
     };
 };
