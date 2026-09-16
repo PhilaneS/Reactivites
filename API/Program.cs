@@ -46,7 +46,7 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblyContaining<GetActivityList.Hander>();
     cfg.AddOpenBehavior(typeof(ValidationBehaviour<,>));
 });
-builder.Services.AddScoped<IPhotoService,PhotoService>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IUserAccessor, UserAccesssor>();
 builder.Services.AddAutoMapper(cfg =>
 {
@@ -56,7 +56,7 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityValidator>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnectionString")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectionString")));
 
 // Configure CORS to allow requests from the React frontend
 builder.Services.AddCors(options =>
@@ -101,11 +101,14 @@ app.UseCors("CorsPolicy");
 app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 app.MapControllers();
 
 app.MapGroup("api").MapIdentityApi<User>();
+app.MapFallbackToController("Index", "Fallback");
 
 app.Run();

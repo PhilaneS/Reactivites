@@ -1,8 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import aget from "../api/agent";
 import useAccount from "./useAccount";
-
-type CreateActivity = Omit<Activity, 'id'>;
+import type { FieldValues } from "react-hook-form";
 
 export const useActivities = (id?: string) => {
   const queryClient = useQueryClient();
@@ -23,7 +22,7 @@ export const useActivities = (id?: string) => {
           ...activity,
           isHost: currentUser?.id === activity.hostId,
           isGoing: activity.attendees.some(x => x.id === currentUser?.id),
-          hostImageUrl: host?.imageUrl
+          hostImageUrl: host?.imageUrl ?? ''
         }
       })
     }
@@ -42,7 +41,7 @@ export const useActivities = (id?: string) => {
         ...data,
         isHost: currentUser?.id === data.hostId,
         isGoing: data.attendees.some(x => x.id === currentUser?.id),
-        hostImageUrl: host?.imageUrl
+        hostImageUrl: host?.imageUrl ?? ''
       }
     }
   });
@@ -63,7 +62,7 @@ export const useActivities = (id?: string) => {
   });
 
   const createActivity = useMutation({
-    mutationFn: async (activity: CreateActivity) => {
+    mutationFn: async (activity: FieldValues) => {
       const response = await aget.post<string>('/activities', activity);
       return response.data;
     },

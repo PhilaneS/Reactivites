@@ -19,12 +19,12 @@ aget.interceptors.request.use(config => {
 
 aget.interceptors.response.use(
     async response => {
-        await sleep(1000);
+        if (import.meta.env.DEV) await sleep(1000);
         store.uiStore.isIdle();
         return response;
     },
     async error => {
-        await sleep(1000);
+        if (import.meta.env.DEV) await sleep(1000);
         store.uiStore.isIdle();
         console.log(error);
         const { status, data } = error.response;

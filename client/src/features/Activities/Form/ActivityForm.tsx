@@ -49,7 +49,11 @@ export default function ActivityForm() {
 
     try {
       if (activity) {
-        await updateActivity.mutateAsync({ ...activity, ...flattenedData }, {
+        await updateActivity.mutateAsync({
+          ...activity,
+          ...flattenedData,
+          hostImageUrl: activity.hostImageUrl ?? ''
+        }, {
           onSuccess: () => navigate(`/activities/${activity.id}`)
         })
       }
@@ -82,7 +86,7 @@ export default function ActivityForm() {
         <LocationInput control={control} label="Enter the location" name='location' />
 
         <Box sx={{ display: 'flex', justifyContent: 'end', gap: 3 }}>
-          <Button variant="contained" color="inherit">Cancel</Button>
+          <Button variant="contained" color="inherit" onClick={() => navigate(-1)} >Cancel</Button>
           <Button disabled={updateActivity.isPending || createActivity.isPending}
             variant="contained" color="success" type="submit">Submit</Button>
         </Box>

@@ -1,4 +1,5 @@
 import { Avatar, Chip, Grid, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from "@mui/material";
+import { Link } from "react-router";
 
 type Props = {
     activity: Activity
@@ -22,10 +23,10 @@ export default function ActivityDetailsSideBar({ activity }: Props) {
             </Paper>
             <Paper sx={{ padding: 2 }}>
                 {activity.attendees.map(attendee => (
-                    <Grid key={attendee.id}  container sx={{ alignItems: "center" }}>
+                    <Grid key={attendee.id} container sx={{ alignItems: "center" }}>
                         <Grid size={8}>
                             <List sx={{ display: 'flex', flexDirection: 'column' }}>
-                                <ListItem>
+                                <ListItem component={Link} to={`/profiles/${attendee.id}`}>
                                     <ListItemAvatar>
                                         <Avatar
                                             variant="rounded"
