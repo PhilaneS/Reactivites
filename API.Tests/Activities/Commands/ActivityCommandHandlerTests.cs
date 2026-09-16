@@ -3,6 +3,7 @@ using Application.Activities.DTOs;
 using Application.Core.MappingProfiles;
 using API.Tests.TestInfrastructure;
 using AutoMapper;
+using Application.Interfaces;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -18,15 +19,20 @@ public sealed class ActivityCommandHandlerTests : SqliteTestBase
         var mapper = new MapperConfiguration(
             configuration => configuration.AddProfile<ActivityProfile>(),
             NullLoggerFactory.Instance).CreateMapper();
-        var handler = new CreateActivity.Handler(Context, mapper);
+        var userAccessor = new TestUserAccessor();
+        Context.Users.Add(userAccessor.User);
+        await Context.SaveChangesAsync();
+        var handler = new CreateActivity.Handler(Context, mapper, userAccessor);
 
         var result = await handler.Handle(
             new CreateActivity.Command { ActivityDto = activityDto },
             CancellationToken.None);
 
-        var savedActivity = await Context.Activities.FindAsync(result);
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(result.Data);
+        var savedActivity = await Context.Activities.FindAsync(result.Data);
         Assert.NotNull(savedActivity);
-        Assert.Equal(result, savedActivity.Id);
+        Assert.Equal(result.Data, savedActivity.Id);
         Assert.Equal("New activity", savedActivity.Title);
     }
 
@@ -37,7 +43,7 @@ public sealed class ActivityCommandHandlerTests : SqliteTestBase
         Context.Activities.Add(activity);
         await Context.SaveChangesAsync();
 
-        var updatedActivity = new Activity
+        var updatedActivity = new EditActivityDto
         {
             Id = activity.Id,
             Title = "Updated title",
@@ -46,14 +52,13 @@ public sealed class ActivityCommandHandlerTests : SqliteTestBase
             Category = "music",
             City = "Paris",
             Venue = "Updated venue",
-            IsCancelled = true,
             Latitude = 48.8,
             Longitude = 2.3
         };
         var handler = new EditActivity.Handler(Context);
 
         await handler.Handle(
-            new EditActivity.Command { Activity = updatedActivity },
+            new EditActivity.Command { EditActivityDto = updatedActivity },
             CancellationToken.None);
 
         var savedActivity = await Context.Activities.FindAsync(activity.Id);
@@ -64,7 +69,6 @@ public sealed class ActivityCommandHandlerTests : SqliteTestBase
         Assert.Equal(updatedActivity.Category, savedActivity.Category);
         Assert.Equal(updatedActivity.City, savedActivity.City);
         Assert.Equal(updatedActivity.Venue, savedActivity.Venue);
-        Assert.Equal(updatedActivity.IsCancelled, savedActivity.IsCancelled);
         Assert.Equal(updatedActivity.Latitude, savedActivity.Latitude);
         Assert.Equal(updatedActivity.Longitude, savedActivity.Longitude);
     }
@@ -73,12 +77,15 @@ public sealed class ActivityCommandHandlerTests : SqliteTestBase
     public async Task EditActivity_WhenActivityDoesNotExist_ThrowsExceptionWithNotFoundMessage()
     {
         var handler = new EditActivity.Handler(Context);
-        var command = new EditActivity.Command { Activity = CreateActivity("Missing activity") };
+        var command = new EditActivity.Command
+        {
+            EditActivityDto = new EditActivityDto { Id = "missing-id" }
+        };
 
-        var exception = await Assert.ThrowsAsync<Exception>(
-            () => handler.Handle(command, CancellationToken.None));
+        var result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.Equal("Activity not found.", exception.Message);
+        Assert.False(result.IsSuccess);
+        Assert.Equal("Activity not found", result.Error);
     }
 
     [Fact]
@@ -93,7 +100,7 @@ public sealed class ActivityCommandHandlerTests : SqliteTestBase
             new DeleteActivity.Command { Id = activity.Id },
             CancellationToken.None);
 
-        Assert.True(result);
+        Assert.True(result.IsSuccess);
         Assert.Null(await Context.Activities.FindAsync(activity.Id));
     }
 
@@ -109,7 +116,7 @@ public sealed class ActivityCommandHandlerTests : SqliteTestBase
             new DeleteActivity.Command { Id = "missing-id" },
             CancellationToken.None);
 
-        Assert.False(result);
+        Assert.False(result.IsSuccess);
         Assert.Equal(1, await Context.Activities.CountAsync());
     }
 
@@ -136,4 +143,19 @@ public sealed class ActivityCommandHandlerTests : SqliteTestBase
         Latitude = 51.5,
         Longitude = -0.1
     };
+
+    private sealed class TestUserAccessor : IUserAccessor
+    {
+        public User User { get; } = new()
+        {
+            Id = "test-user",
+            UserName = "test@example.com",
+            Email = "test@example.com",
+            DisplayName = "Test User"
+        };
+
+        public string GetUserId() => User.Id;
+        public Task<User> GetUserAsync() => Task.FromResult(User);
+        public Task<User> GetUserWithPhotosAsync() => Task.FromResult(User);
+    }
 }
