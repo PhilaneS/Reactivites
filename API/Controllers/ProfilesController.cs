@@ -12,7 +12,7 @@ namespace API.Controllers
         [HttpGet("{userId}")]
         public async Task<ActionResult<UserProfileDto>> GetProfile(string userId)
         {
-            return HandleResult(await Mediator.Send(new GetProfile.Query { UserId = userId }));
+            return HandleResult(await Mediator.Send(new GetProfile.Query { userId = userId }));
         }
 
         [HttpPost("add-photo")]
@@ -43,6 +43,18 @@ namespace API.Controllers
         public async Task<ActionResult> UpdateProfile(EditProfile.Command command)
         {
             return HandleResult(await Mediator.Send(command));
+        }
+
+        [HttpPost("{userId}/follow")]
+        public async Task<IActionResult> Follow(string userId)
+        {
+            return HandleResult(await Mediator.Send(new FollowToggle.Command
+            { TargetUserId = userId }));
+        }
+        [HttpGet("{userId}/follow-list")]
+        public async Task<IActionResult> GetFollowings(string userId, string predicate)
+        {
+            return HandleResult(await Mediator.Send(new GetFollowings.Query { UserId = userId, Predicate = predicate }));
         }
 
     }

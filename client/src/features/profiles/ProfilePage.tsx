@@ -1,4 +1,4 @@
-import { Alert, CircularProgress, Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { useParams } from "react-router";
 import { useProfile } from "../../lib/hooks/useProfile";
 import ProfileHeader from "./ProfileHeader";
@@ -6,20 +6,16 @@ import ProfileContent from "./ProfileContent";
 
 export default function ProfilePage() {
     const { id } = useParams();
-    const { profile, isLoadingProfile, isLoatingPhotos } = useProfile(id);
+    const { profile, isLoadingProfile } = useProfile(id);
 
-    if (isLoadingProfile || isLoatingPhotos) {
-        return <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 8 }} />;
-    }
+    if (isLoadingProfile) return <Typography>Loading profile...</Typography>
 
-    if (!profile) {
-        return <Alert severity="error">Profile not found.</Alert>;
-    }
+    if (!profile) return <Typography>Profile not found</Typography>
 
     return (
         <Grid container spacing={3}>
             <Grid size={12}>
-                <ProfileHeader profile={profile} />
+                <ProfileHeader />
                 <ProfileContent />
             </Grid>
         </Grid>
