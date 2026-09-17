@@ -13,11 +13,11 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Application.Interfaces;
 using Infrastructure.Security;
 using Infrastructure.Photos;
+using API.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers(opt =>
 {
     var policy = new AuthorizationPolicyBuilder()
@@ -77,7 +77,7 @@ builder.Services.AddAuthorization(opt =>
         policy.Requirements.Add(new IsHostRequirement());
     });
 });
-
+builder.Services.AddSignalR();
 builder.Services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration
     .GetSection("CloudinarySettings"));
@@ -109,6 +109,7 @@ app.UseStaticFiles();
 app.MapControllers();
 
 app.MapGroup("api").MapIdentityApi<User>();
+app.MapHub<CommentHub>("/comments");
 app.MapFallbackToController("Index", "Fallback");
 
 app.Run();

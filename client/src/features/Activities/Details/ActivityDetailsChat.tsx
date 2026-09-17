@@ -14,9 +14,9 @@ export default function ActivityDetailsChat() {
             >
                 <Typography variant="h6">Chat about this event</Typography>
             </Box>
-<Card>
-    <CardContent>
-        <div>
+            <Card>
+                <CardContent>
+                    <div>
                         <form>
                             <TextField
                                 variant="outlined"
@@ -30,8 +30,8 @@ export default function ActivityDetailsChat() {
                     <Box>
                         <Box sx={{ display: 'flex', my: 2 }}>
                             <Avatar src={'/images/user.png'} alt={'user image'} sx={{ mr: 2 }} />
-                            <Box sx={{display:'flex', flexDirection:'column'}} >
-                                <Box sx={{display:'flex', alignItems:'center', gap:3}}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }} >
+                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 3 }}>
                                     <Typography component={Link} to={`/profiles/username`} variant="subtitle1" sx={{ fontWeight: 'bold', textDecoration: 'none' }}>
                                         Bob
                                     </Typography>
@@ -44,8 +44,8 @@ export default function ActivityDetailsChat() {
                             </Box>
                         </Box>
                     </Box>
-    </CardContent>
-</Card>
+                </CardContent>
+            </Card>
 
         </>
     )
