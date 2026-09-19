@@ -32,7 +32,7 @@ namespace Application.Activities.Queries
                     query = request.Params.Filter switch
                     {
                         "isGoing" => query.Where(x => x.Attendees.Any(a => a.UserId == userAccessor.GetUserId())),
-                        "IsHost" => query.Where(x => x.Attendees.Any(a => a.IsHost && a.UserId == userAccessor.GetUserId())),
+                        "isHost" => query.Where(x => x.Attendees.Any(a => a.IsHost && a.UserId == userAccessor.GetUserId())),
                         _ => query
                     };
                 }
