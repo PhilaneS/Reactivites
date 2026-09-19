@@ -6,9 +6,9 @@ import ProfileContent from "./ProfileContent";
 
 export default function ProfilePage() {
     const { id } = useParams();
-    const { profile, isLoadingProfile } = useProfile(id);
+    const { profile, loadingProfile } = useProfile(id);
 
-    if (isLoadingProfile) return <Typography>Loading profile...</Typography>
+    if (loadingProfile) return <Typography>Loading profile...</Typography>
 
     if (!profile) return <Typography>Profile not found</Typography>
 

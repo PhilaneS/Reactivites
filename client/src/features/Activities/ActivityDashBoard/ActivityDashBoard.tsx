@@ -5,13 +5,13 @@ import ActivityFilters from "./ActivityFilters";
 export default function ActivityDashBoard() {
 
   return (
-    <Grid container spacing={2}>
-      <Grid size={7}>
-        <ActivityList         
+    <Grid container spacing={3}>
+      <Grid size={8} >
+        <ActivityList
         />
       </Grid>
-      <Grid size={5}>
-       <ActivityFilters/> 
+      <Grid size={4} sx={{ top: 105, alignSelf: "flex-start", position: 'sticky' }}>
+        <ActivityFilters />
       </Grid>
 
     </Grid>

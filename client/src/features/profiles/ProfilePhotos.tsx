@@ -8,7 +8,7 @@ import DeleteButton from "../../app/shared/componets/DeleteButton";
 
 export default function ProfilePhotos() {
     const { id } = useParams();
-    const { photos, isLoatingPhotos, isCurrentUser, uploadPhoto,
+    const { photos, loadingPhotos, isCurrentUser, uploadPhoto,
         profile, setMainPhoto, deletePhoto } = useProfile(id);
     const [EditMode, setEditMode] = useState(false);
 
@@ -20,7 +20,7 @@ export default function ProfilePhotos() {
         });
     }
 
-    if (isLoatingPhotos) return <Typography>Loading...</Typography>
+    if (loadingPhotos) return <Typography>Loading...</Typography>
 
     if (!photos) return <Typography>No photos found for this user</Typography>
     return (
