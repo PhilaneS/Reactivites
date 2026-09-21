@@ -78,6 +78,7 @@ builder.Services.AddCors(options =>
               .WithOrigins(
                     "http://localhost:3000",
                     "https://localhost:3000",
+                    "https://reactivites-zeta.vercel.app",
                     "https://www.lubanzichilldrop.co.za"); // Update this to match your React app's URL
     });
 });
