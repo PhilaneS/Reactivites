@@ -117,13 +117,9 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
-
 app.MapControllers();
 
 app.MapGroup("api").MapIdentityApi<User>();
 app.MapHub<CommentHub>("/comments");
-app.MapFallbackToController("Index", "Fallback");
 
 app.Run();
