@@ -14,6 +14,7 @@ using Application.Interfaces;
 using Infrastructure.Security;
 using Infrastructure.Photos;
 using API.SignalR;
+using API.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,7 +75,10 @@ builder.Services.AddCors(options =>
         policy.AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials()
-              .WithOrigins("http://localhost:3000", "https://localhost:3000"); // Update this to match your React app's URL
+              .WithOrigins(
+                    "http://localhost:3000",
+                    "https://localhost:3000",
+                    "https://www.lubanzichilldrop.co.za"); // Update this to match your React app's URL
     });
 });
 
@@ -89,6 +93,7 @@ builder.Services.AddSignalR();
 builder.Services.AddTransient<IAuthorizationHandler, IsHostRequirementHandler>();
 builder.Services.Configure<CloudinarySettings>(builder.Configuration
     .GetSection("CloudinarySettings"));
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 //builder.Services.AddOpenApi();

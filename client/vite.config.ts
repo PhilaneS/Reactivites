@@ -5,9 +5,10 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   build: {
-    outDir:'../API/wwwroot',
-    chunkSizeWarningLimit:1500,
-    emptyOutDir:true 
+    //outDir:'../API/wwwroot',
+    outDir: 'dist',
+    chunkSizeWarningLimit: 1500,
+    emptyOutDir: true
   },
   server: {
     port: 3000
