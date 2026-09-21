@@ -6,6 +6,8 @@ using Application.Activities.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using API.Controllers;
 using Microsoft.AspNetCore.Identity;
+using Application.Profiles.Commands;
+using Application.Profiles.Dtos;
 
 namespace API.DTOs
 {
@@ -15,14 +17,9 @@ namespace API.DTOs
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUser(RegisterDto registerDto)
         {
-            var user = new User
-            {
-                DisplayName = registerDto.DisplayName,
-                Email = registerDto.Email,
-                UserName = registerDto.Email
-            };
 
-            var result = await signInManager.UserManager.CreateAsync(user, registerDto.Password);
+            var result = await Mediator.Send(
+                new CreateProfile.Command { Register = registerDto });
 
             if (result.Succeeded) return Ok();
 
