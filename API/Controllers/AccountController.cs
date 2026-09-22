@@ -1,13 +1,12 @@
 using Domain;
 using Microsoft.AspNetCore.Mvc;
-using Application.Activities.Queries;
-using Application.Activities.Commands;
-using Application.Activities.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using API.Controllers;
 using Microsoft.AspNetCore.Identity;
-using Application.Profiles.Commands;
 using Application.Profiles.Dtos;
+using Application.Accounts.Commands;
+using Application.Accounts.commands;
+
 
 namespace API.DTOs
 {
@@ -19,7 +18,7 @@ namespace API.DTOs
         {
 
             var result = await Mediator.Send(
-                new CreateProfile.Command { Register = registerDto });
+                new CreateUser.Command { Register = registerDto });
 
             if (result.Succeeded) return Ok();
 
@@ -48,13 +47,20 @@ namespace API.DTOs
             });
 
         }
-
+        [Authorize]
         [HttpPost("logout")]
         public async Task<ActionResult> Logout()
         {
             await signInManager.SignOutAsync();
 
             return NoContent();
+        }
+
+        [AllowAnonymous]
+        [HttpPost("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(ConfirmEmail.Command command)
+        {
+            return HandleResult(await Mediator.Send(command));
         }
 
     }

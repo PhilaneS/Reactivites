@@ -22,22 +22,9 @@ export default function useAccount() {
         }
     });
 
-    const { data: currentUser, isLoading: loadingUserInfo } = useQuery({
-        queryKey: ['user'],
-        queryFn: async () => {
-            const response = await aget.get<User>('/account/user-info');
-            return response.data;
-        },
-        enabled: !queryClient.getQueryData(['user'])
-    });
-
     const registerUser = useMutation({
         mutationFn: async (creds: RegisterSchema) => {
             await aget.post('/account/register', creds)
-        },
-        onSuccess: () => {
-            toast.success('Register successfull - you can now login');
-            navigate('/login');
         }
     });
 
@@ -51,11 +38,38 @@ export default function useAccount() {
             navigate('/');
         }
     });
+    const verifyEmail = useMutation({
+        mutationFn: async ({ userId, code }: { userId: string, code: string }) => {
+            await aget.get(`/confirmEmail?userId=${userId}&code=${code}`);
+        }
+    });
+
+    const resendConfirmationEmail = useMutation({
+        mutationFn: async ({ email, userId }: { email?: string, userId?: string | null }) => {
+            await aget.get(`/account/confirm-email`, {
+                params: { email, userId }
+            });
+        },
+        onSuccess: () => {
+            toast.success('Email sent - please check your inbox');
+        }
+    });
+    const { data: currentUser, isLoading: loadingUserInfo } = useQuery({
+        queryKey: ['user'],
+        queryFn: async () => {
+            const response = await aget.get<User>('/account/user-info');
+            return response.data;
+        },
+        enabled: !queryClient.getQueryData(['user'])
+    });
+
     return {
         loginUser,
         currentUser,
         logoutUser,
         loadingUserInfo,
-        registerUser
+        registerUser,
+        resendConfirmationEmail,
+        verifyEmail
     }
 }

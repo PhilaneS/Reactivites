@@ -28,6 +28,5 @@ createRoot(document.getElementById('root')!).render(
         </LocalizationProvider>
       </QueryClientProvider>
     </StoreContext.Provider>
-
   </StrictMode>,
 )

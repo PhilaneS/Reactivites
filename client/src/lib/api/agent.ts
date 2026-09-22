@@ -47,7 +47,12 @@ aget.interceptors.response.use(
                 }
                 break;
             case 401:
-                toast.error('Unauthorised');
+                toast.error('unauthorised');
+                if (data.detail === 'NotAllowed') {
+                    throw new Error(data.detail)
+                } else {
+                    toast.error('Unauthorised');
+                }
                 break;
             case 404:
                 router.navigate('/not-found');
