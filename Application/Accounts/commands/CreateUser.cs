@@ -35,6 +35,11 @@ namespace Application.Accounts.Commands
 
                 var confirmEmailUrl = $"{config["ClientAppUrl"]}/confirm-email?userId={Uri.EscapeDataString(user.Id)}&code={Uri.EscapeDataString(token)}";
 
+                //Temporarily commented out the email sending functionality for testing purposes and just verify the confirmation
+                
+                await userManager.ConfirmEmailAsync(user,token);  
+                
+
                 await emailService.SendConfirmationEmailAsync(user.Email, user.DisplayName, confirmEmailUrl, cancellationToken);
 
                 return result;

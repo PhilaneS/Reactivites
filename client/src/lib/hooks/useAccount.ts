@@ -40,7 +40,8 @@ export default function useAccount() {
     });
     const verifyEmail = useMutation({
         mutationFn: async ({ userId, code }: { userId: string, code: string }) => {
-            await aget.get(`/confirmEmail?userId=${userId}&code=${code}`);
+
+            await aget.get(`/account/confirm-email?userId=${userId}&code=${code}`);
         }
     });
 

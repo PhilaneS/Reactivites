@@ -56,6 +56,7 @@ namespace API.DTOs
             return NoContent();
         }
 
+
         [AllowAnonymous]
         [HttpPost("confirm-email")]
         public async Task<IActionResult> ConfirmEmail(ConfirmEmail.Command command)

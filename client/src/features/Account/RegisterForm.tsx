@@ -14,7 +14,13 @@ export default function RegisterFrom() {
     const [registerSuccess, setRegisterSuccess] = useState(false);
 
     const { control, setError, handleSubmit, formState: { isValid, isSubmitting } } = useForm<RegisterSchema>({
-        mode: 'onTouched', resolver: zodResolver(registerSchema)
+        mode: 'onTouched',
+        resolver: zodResolver(registerSchema),
+        defaultValues: {
+            email: '',
+            displayName: '',
+            password: ''
+        }
     });
     const email = useWatch({ control, name: 'email' });
 
